@@ -121,8 +121,8 @@ def load_upside_traj(fname, stride=1, from_init=False, fasta_fn='', chain_breaks
 
     if from_init and target_pos_only:
         raise ValueError("Cannot have both from_init and target_pos_only.")
-    if from_init and (not fasta_fn or not chain_breaks_fn):
-        raise ValueError("from_init requires both fasta_fn and chain_breaks_fn set.")
+    if from_init and not fasta_fn:
+        raise ValueError("from_init requires fasta_fn set.")
 
     last_time = 0.
     start_frame = 0
@@ -141,9 +141,10 @@ def load_upside_traj(fname, stride=1, from_init=False, fasta_fn='', chain_breaks
         seq = fasta_str.replace("*", "") # Remove CIS PRO indicators
         seq = [aa_conv_dict[aa] for aa in seq]
 
-        with open(chain_breaks_fn) as f:
-            chain_first_residue = np.append(chain_first_residue,
-                                            np.array([int(i) for i in f.readline().split()]))
+        if chain_breaks_fn:
+            with open(chain_breaks_fn) as f:
+                chain_first_residue = np.append(chain_first_residue,
+                                                np.array([int(i) for i in f.readline().split()]))
     else:
         with tb.open_file(fname) as t:
             if target_pos_only:

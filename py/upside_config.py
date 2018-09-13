@@ -1534,7 +1534,7 @@ def main():
             com_dist_list = []
             for i in xrange(len(com_list)):
                 for j in xrange(n_atom):
-                        com_dist_list.append(vmag(com_list[i]-pos[j,:,0]))
+                        com_dist_list.append(vmag(com_list[i]-pos[j,:,0]) + 2.)
 
             args.cavity_radius = args.heuristic_cavity_radius*max(com_dist_list)
             print
