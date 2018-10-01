@@ -60,6 +60,7 @@ def upside_config(fasta,
                   offset_spring='',
                   rotamer_interaction_param='',
                   contacts='',
+                  cooperation_contacts='',
                   spherical_well='',
                   secstr_bias='',
                   chain_break_from_file='',
@@ -111,6 +112,8 @@ def upside_config(fasta,
         args.append('--secstr-bias=%s'%secstr_bias)
     if contacts:
         args.append('--contact-energies=%s'%contacts)
+    if cooperation_contacts:
+        args.append('--cooperation-contacts=%s'%cooperation_contacts)
     if spherical_well:
         args.append('--spherical-well=%s'%spherical_well)
 
