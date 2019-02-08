@@ -1366,7 +1366,7 @@ def main():
     parser.add_argument('--hbond-exclude-residues', default=[], type=parse_segments,
             help='Residues to have neither hydrogen bond donors or acceptors')
     parser.add_argument('--chain-break-from-file', default='',
-            help='File with indices of chain first residues recorded during initial structure generation to automate --hbond-exclude-residues.')
+            help='File with indices of chain first residues recorded during initial structure generation to automate creation and analysis of separate chains.')
 
     parser.add_argument('--loose-hbond-criteria', default=False, action='store_true',
             help='Use far more permissive angles and distances to judge HBonding.  Do not use for simulation. '+
