@@ -116,7 +116,7 @@ def traj_from_upside(seq, time, pos, chain_first_residue=[0]):
 
 
 @FormatRegistry.register_loader('.up')
-def load_upside_traj(fname, stride=1, from_init=False, fasta_fn='', chain_breaks_fn='', target_pos_only=False):
+def load_upside_traj(fname, stride=1, external_pos=[], from_init=False, fasta_fn='', chain_breaks_fn='', target_pos_only=False):
     import tables as tb
 
     if from_init and target_pos_only:
@@ -164,8 +164,12 @@ def load_upside_traj(fname, stride=1, from_init=False, fasta_fn='', chain_breaks
 
             if 'chain_break' in t.root.input:
                 chain_first_residue = np.append(chain_first_residue, t.root.input.chain_break.chain_first_residue[:])
-     
-    if from_init or target_pos_only:
+    
+    if len(external_pos) > 0:
+        assert external_pos.shape[1:] == xyz[0].shape[1:]
+        xyz = external_pos[::stride]
+        time = [np.arange(len(xyz))]
+    elif from_init or target_pos_only:
         xyz = np.array(xyz)
         time.append(np.zeros(1,dtype='f4'))
     else:
@@ -257,9 +261,9 @@ def kmeans_cluster(pc, rmsd, n_clusters):
 def extract_bb_pos_angstroms(traj):
     # extract N,CA,C positions for measurements
     bb_sele = traj.top.select("backbone")
-    bb_atoms =  [(a.serial,a.index) for a in traj.atom_slice(bb_sele).top.atoms if a.name in ('N','CA','C')]
+    bb_3 =  np.array([a.index for a in traj.atom_slice(bb_sele).top.atoms if a.name in ('N','CA','C')])
     # Must convert distances to angstroms
-    pos = 10.*traj.atom_slice(bb_sele).xyz[:,np.array([index for serial,index in sorted(bb_atoms)])]
+    pos = 10.*traj.atom_slice(bb_sele).xyz[:,np.array(bb_3)]
     assert pos.shape[1] == traj.n_residues*3
     return pos
 
